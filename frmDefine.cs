@@ -25,12 +25,17 @@ namespace Define
         private void btnDefineWord_Click(object sender, EventArgs e)
         {
             List<Result> results;
-            results = searchDefinition(txtWordToDefine.Text);
 
-            if(results != null)
+            if(validateInput(txtWordToDefine.Text))
             {
-                updateFields(results);
+                results = searchDefinition(txtWordToDefine.Text);
+
+                if (results != null)
+                {
+                    updateFields(results);
+                }
             }
+           
          
         }
 
@@ -39,7 +44,8 @@ namespace Define
             try
             {
                 if (wordToDefine != "")
-                {
+                { 
+
                     string dictionaryURL = "https://api.dictionaryapi.dev/api/v2/entries/en/";
                     var request = WebRequest.Create(dictionaryURL + wordToDefine);
                     Console.WriteLine(request.RequestUri);
@@ -123,6 +129,76 @@ namespace Define
             {
                 MessageBox.Show(ex.ToString());
             }
+        }
+
+        private string getLanguage(string selectedLanguage)
+        {
+            string languageCode = "en"; //default language to english
+
+            try
+            {
+                switch (selectedLanguage)
+                {
+                    case "Englsh":
+                        languageCode = "en";
+                        break;
+                    case "Hindi":
+                        languageCode = "hi";
+                        break;
+                    case "Spanish":
+                        languageCode = "es";
+                        break;
+                    case "French":
+                        languageCode = "fr";
+                        break;
+                    case "Japanese":
+                        languageCode = "ja";
+                        break;
+                    case "Russian":
+                        languageCode = "ru";
+                        break;
+                    case "German":
+                        languageCode = "de";
+                        break;
+                    //TODO finish languages
+                }
+
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+            return languageCode;
+
+        }
+
+        private Boolean validateInput(string input)
+        {
+            var inputValid = false;
+            try
+            {
+                if(input != "")
+                {
+                    int i; //Int comparison value
+                    if(int.TryParse(input, out i))
+                    {
+                        MessageBox.Show("Numbers are not supported.");
+                    }
+                    else
+                    {
+                        inputValid = true;
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Please enter a word to define");
+                }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+            return inputValid;
         }
     }
 }
